@@ -1,10 +1,13 @@
-package nure.ua.clothesstore.entity;
+package nure.ua.clothesstore.entity.enums;
 
 public enum Role {
-    USER,
-    ADMIN;
-    String role;
+    USER("User"),
+    ADMIN("Admin");
+    private String role;
     Role(String role){
-        return role.to
+        this.role=role;
+    }
+    public String getRole(){
+        return role;
     }
 }
