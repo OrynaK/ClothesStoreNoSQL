@@ -19,6 +19,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     private static final String GET_USER_BY_ID = "SELECT * from user WHERE id=?";
+    private static final String UPDATE = "UPDATE user SET name=?, surname=?, email=?, password=?, phone = ? WHERE id=?";
     private static final String GET_ALL_USERS = "SELECT * from user";
     private static final String ADD_USER = "INSERT INTO user (name, surname, password, email, phone) VALUES (?, ?, ?, ?, ?)";
     private static final String FIND_USER_IN_ORDER = "SELECT * FROM user_order WHERE user_id=?";
@@ -48,8 +49,22 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User update(User entity) throws DBException {
-        return null;
+    public User update(User user) {
+        try (Connection con = connectionManager.getConnection()) {
+            try (PreparedStatement ps = con.prepareStatement(UPDATE)) {
+                int k = 0;
+                ps.setString(++k, user.getName());
+                ps.setString(++k, user.getSurname());
+                ps.setString(++k, user.getEmail());
+                ps.setString(++k, user.getPassword());
+                ps.setString(++k, user.getPhone());
+                ps.setLong(++k, user.getId());
+                ps.executeUpdate();
+            }
+            return findById(user.getId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
